@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Budget Planner</title>
+<style>
+:root{--green:#168653;--dark:#11633f;--pale:#e9f7ef;--bg:#f5f8f6;--text:#1d3026;--muted:#718078;--border:#e1e9e3;--red:#dc5252}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1150px;margin:auto;padding:26px 20px 45px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{background:var(--green);color:white;border-radius:13px;width:46px;height:46px;display:grid;place-items:center;font-size:25px;font-weight:bold}
+h1{font-size:23px;margin:0 0 5px}
+.subtitle{color:var(--muted);font-size:13px}
+.header-actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:700;font-size:13px}
+.btn-primary{background:var(--green);color:white}
+.btn-light{background:white;border:1px solid var(--border);color:var(--text)}
+.btn-danger{background:#fff0f0;color:var(--red)}
+.hero{background:linear-gradient(120deg,#137448,#20a568);color:white;padding:25px;border-radius:18px;margin-bottom:23px}
+.hero-label{font-size:13px;opacity:.9}
+.hero-amount{font-size:36px;font-weight:800;margin:8px 0 20px;overflow-wrap:anywhere}
+.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.hero-stat{border-top:1px solid #ffffff50;padding-top:13px}
+.hero-stat span{display:block;font-size:12px;opacity:.85;margin-bottom:7px}
+.hero-stat strong{font-size:18px;overflow-wrap:anywhere}
+.section-title{font-size:18px;margin:28px 0 14px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{background:white;border:1px solid var(--border);border-radius:15px;padding:19px;min-width:0}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:17px}
+.category{font-weight:800;font-size:16px}
+.pill{font-size:11px;background:var(--pale);color:var(--dark);padding:6px 9px;border-radius:20px;font-weight:bold}
+.amount{font-size:24px;font-weight:800;margin:5px 0}
+.small{font-size:12px;color:var(--muted)}
+.progress{height:9px;border-radius:20px;background:#eaf0eb;overflow:hidden;margin:15px 0 9px}
+.fill{height:100%;width:0%;border-radius:20px;background:var(--green);transition:width .2s}
+.fill.over{background:var(--red)}
+.progress-caption{display:flex;justify-content:space-between;gap:8px;font-size:12px}
+.stats-line{display:flex;justify-content:space-between;gap:8px;margin-top:16px;padding-top:13px;border-top:1px solid var(--border);font-size:12px}
+.stats-line strong{display:block;margin-top:6px;font-size:14px}
+.form-card{background:white;border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:18px}
+.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.field label{display:block;font-size:12px;font-weight:bold;margin-bottom:7px}
+.field input,.field select{width:100%;min-width:0;border:1px solid #d8e3da;border-radius:9px;padding:12px;background:white;color:var(--text);outline-color:var(--green)}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:12px 0 0}
+.form-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
+.table-wrap{overflow-x:auto;background:white;border:1px solid var(--border);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px}
+th{background:#f8faf8;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+tr:last-child td{border-bottom:0}
+td.amount-cell{font-weight:800;white-space:nowrap}
+.row-actions{display:flex;gap:7px}
+.empty{text-align:center;color:var(--muted);padding:30px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:25px}
+.hidden{display:none!important}
+@media(max-width:750px){.cards{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}.app{padding:18px 13px}.hero-amount{font-size:30px}header{align-items:flex-start}.hero-grid{gap:10px}.hero-stat strong{font-size:15px}}
+@media(max-width:430px){.form-grid{grid-template-columns:1fr}.header-actions{max-width:125px}.btn{padding:10px;font-size:12px}.hero{padding:19px}.hero-amount{font-size:26px}}
+@media print{body{background:white}.app{max-width:none;padding:0}.no-print,form,.form-card .form-actions,.row-actions{display:none!important}.hero,.card,.form-card,.table-wrap{break-inside:avoid}.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}.cards{gap:8px}.card{padding:12px}th{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo">₱</div>
+    <div><h1>Student Budget Planner</h1><div class="subtitle">Plan wisely. Spend mindfully. Save consistently.</div></div>
+  </div>
+  <div class="header-actions no-print">
+    <button class="btn btn-light" id="resetBtn" type="button">Reset</button>
+    <button class="btn btn-primary" id="printBtn" type="button">Print / PDF</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-label">Available Balance</div>
+  <div class="hero-amount" id="balance">₱0.00</div>
+  <div class="hero-grid">
+    <div class="hero-stat"><span>Total Income</span><strong id="incomeTotal">₱0.00</strong></div>
+    <div class="hero-stat"><span>Total Expenses</span><strong id="expenseTotal">₱0.00</strong></div>
+    <div class="hero-stat"><span>Budget Used</span><strong id="overallPct">0%</strong></div>
+  </div>
+</section>
+
+<h2 class="section-title">Your Budget Overview</h2>
+<div class="cards">
+  <section class="card">
+    <div class="card-top"><span class="category">Needs</span><span class="pill">70% Budget</span></div>
+    <div class="small">Allocated budget</div><div class="amount" id="needsBudget">₱0.00</div>
+    <div class="progress"><div class="fill" id="needsFill"></div></div>
+    <div class="progress-caption"><span id="needsUsedPct">0% used</span><span id="needsRemainPct">100% left</span></div>
+    <div class="stats-line"><div><span class="small">Spent</span><strong id="needsSpent">₱0.00</strong></div><div><span class="small">Remaining</span><strong id="needsLeft">₱0.00</strong></div></div>
+  </section>
+  <section class="card">
+    <div class="card-top"><span class="category">Savings</span><span class="pill">20% Budget</span></div>
+    <div class="small">Allocated budget</div><div class="amount" id="savingsBudget">₱0.00</div>
+    <div class="progress"><div class="fill" id="savingsFill"></div></div>
+    <div class="progress-caption"><span id="savingsUsedPct">0% used</span><span id="savingsRemainPct">100% left</span></div>
+    <div class="stats-line"><div><span class="small">Spent / Added</span><strong id="savingsSpent">₱0.00</strong></div><div><span class="small">Remaining</span><strong id="savingsLeft">₱0.00</strong></div></div>
+  </section>
+  <section class="card">
+    <div class="card-top"><span class="category">Wants</span><span class="pill">10% Budget</span></div>
+    <div class="small">Allocated budget</div><div class="amount" id="wantsBudget">₱0.00</div>
+    <div class="progress"><div class="fill" id="wantsFill"></div></div>
+    <div class="progress-caption"><span id="wantsUsedPct">0% used</span><span id="wantsRemainPct">100% left</span></div>
+    <div class="stats-line"><div><span class="small">Spent</span><strong id="wantsSpent">₱0.00</strong></div><div><span class="small">Remaining</span><strong id="wantsLeft">₱0.00</strong></div></div>
+  </section>
+</div>
+
+<h2 class="section-title">Budget Setup</h2>
+<div class="form-card">
+  <div class="form-grid">
+    <div class="field"><label for="studentName">Student Name</label><input id="studentName" placeholder="Enter your name" maxlength="80"></div>
+    <div class="field"><label for="allowance">Allowance (₱)</label><input id="allowance" type="number" min="0" step="0.01" placeholder="e.g. 500"></div>
+    <div class="field"><label for="otherIncome">Other Income (₱)</label><input id="otherIncome" type="number" min="0" step="0.01" placeholder="e.g. 100"></div>
+  </div>
+  <p class="note">Your income is automatically divided into Needs (70%), Savings (20%), and Wants (10%). Percentages show how much of each category's allocated budget has been used.</p>
+</div>
+
+<h2 class="section-title" id="expenseFormTitle">Add an Expense</h2>
+<div class="form-card">
+  <form id="expenseForm">
+    <div class="form-grid">
+      <div class="field"><label for="expenseName">Expense Description</label><input id="expenseName" placeholder="e.g. Lunch, fare, school supplies" maxlength="100" required></div>
+      <div class="field"><label for="expenseAmount">Amount (₱)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="e.g. 50" required></div>
+      <div class="field"><label for="expenseCategory">Category</label><select id="expenseCategory"><option value="Needs">Needs</option><option value="Savings">Savings</option><option value="Wants">Wants</option></select></div>
+      <div class="field"><label for="expenseDate">Date</label><input id="expenseDate" type="date" required></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit" id="submitExpense">Add Expense</button>
+      <button class="btn btn-light hidden" type="button" id="cancelEdit">Cancel Edit</button>
+    </div>
+  </form>
+</div>
+
+<div class="card-top" style="margin-top:28px">
+  <h2 class="section-title" style="margin:0">Expense History</h2>
+  <span class="small" id="expenseCount">0 entries</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th class="no-print">Actions</th></tr></thead>
+    <tbody id="expenseRows"></tbody>
+  </table>
+  <div class="empty" id="emptyMessage">No expenses yet. Add your first expense above.</div>
+</div>
+<div class="footer">Student Budget Planner · Your data is saved in this browser on this device.</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const KEY="studentBudgetPlanner_v1";
+const $=id=>document.getElementById(id);
+const money=n=>"₱"+Number(n||0).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+let expenses=[],editingId=null;
+let state={name:"",allowance:0,otherIncome:0};
+
+function safeLoad(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(saved&&typeof saved==="object"){
+   state.name=typeof saved.name==="string"?saved.name:"";
+   state.allowance=Math.max(0,Number(saved.allowance)||0);
+   state.otherIncome=Math.max(0,Number(saved.otherIncome)||0);
+   expenses=Array.isArray(saved.expenses)?saved.expenses.filter(e=>e&&typeof e.id==="string"&&typeof e.description==="string"&&["Needs","Savings","Wants"].includes(e.category)&&Number.isFinite(Number(e.amount))&&Number(e.amount)>0&&typeof e.date==="string").map(e=>({...e,amount:Number(e.amount)})):[];
+  }
+ }catch(e){console.warn("Could not load saved budget",e)}
+ $("studentName").value=state.name;
+ $("allowance").value=state.allowance||"";
+ $("otherIncome").value=state.otherIncome||"";
+}
+function save(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify({...state,expenses}));
+ }catch(e){alert("Your browser could not save the data. Check browser storage settings.");}
+}
+function getBudget(){
+ const income=state.allowance+state.otherIncome;
+ return {income,Needs:income*.70,Savings:income*.20,Wants:income*.10};
+}
+function updateCategory(key,spent,budget){
+ const pct=budget>0?spent/budget*100:spent>0?100:0;
+ const clamped=Math.min(100,Math.max(0,pct));
+ $(key+"Budget").textContent=money(budget);
+ $(key+"Spent").textContent=money(spent);
+ $(key+"Left").textContent=money(budget-spent);
+ $(key+"UsedPct").textContent=(Math.round(pct*10)/10)+"% used";
+ $(key+"RemainPct").textContent=(Math.round((100-pct)*10)/10)+"% left";
+ $(key+"Fill").style.width=clamped+"%";
+ $(key+"Fill").classList.toggle("over",pct>100);
+}
+function render(){
+ const b=getBudget(),spent={Needs:0,Savings:0,Wants:0};
+ expenses.forEach(e=>spent[e.category]+=e.amount);
+ const total=expenses.reduce((sum,e)=>sum+e.amount,0);
+ $("balance").textContent=money(b.income-total);
+ $("incomeTotal").textContent=money(b.income);
+ $("expenseTotal").textContent=money(total);
+ $("overallPct").textContent=(b.income>0?(Math.round(total/b.income*1000)/10):0)+"%";
+ updateCategory("needs",spent.Needs,b.Needs);
+ updateCategory("savings",spent.Savings,b.Savings);
+ updateCategory("wants",spent.Wants,b.Wants);
+ $("expenseCount").textContent=expenses.length+" "+(expenses.length===1?"entry":"entries");
+ $("emptyMessage").classList.toggle("hidden",expenses.length>0);
+ const rows=$("expenseRows");rows.replaceChildren();
+ [...expenses].sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>{
+  const tr=document.createElement("tr");
+  [e.date,e.description,e.category].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td)});
+  const amount=document.createElement("td");amount.className="amount-cell";amount.textContent=money(e.amount);tr.appendChild(amount);
+  const actions=document.createElement("td");actions.className="no-print";
+  const wrap=document.createElement("div");wrap.className="row-actions";
+  const edit=document.createElement("button");edit.type="button";edit.className="btn btn-light";edit.textContent="Edit";edit.addEventListener("click",()=>startEdit(e.id));
+  const del=document.createElement("button");del.type="button";del.className="btn btn-danger";del.textContent="Delete";del.addEventListener("click",()=>deleteExpense(e.id));
+  wrap.append(edit,del);actions.appendChild(wrap);tr.appendChild(actions);rows.appendChild(tr);
+ });
+}
+function startEdit(id){
+ const e=expenses.find(e=>e.id===id);if(!e)return;
+ editingId=id;$("expenseName").value=e.description;$("expenseAmount").value=e.amount;
+ $("expenseCategory").value=e.category;$("expenseDate").value=e.date;
+ $("expenseFormTitle").textContent="Edit Expense";$("submitExpense").textContent="Save Changes";
+ $("cancelEdit").classList.remove("hidden");$("expenseName").focus();
+}
+function cancelEdit(){
+ editingId=null;$("expenseForm").reset();$("expenseDate").value=today();
+ $("expenseFormTitle").textContent="Add an Expense";$("submitExpense").textContent="Add Expense";
+ $("cancelEdit").classList.add("hidden");
+}
+function deleteExpense(id){
+ const e=expenses.find(e=>e.id===id);if(!e)return;
+ if(!confirm('Delete "'+e.description+'"?'))return;
+ expenses=expenses.filter(e=>e.id!==id);if(editingId===id)cancelEdit();
+ save();render();
+}
+["studentName","allowance","otherIncome"].forEach(id=>{
+ $(id).addEventListener("input",()=>{
+  state.name=$("studentName").value;
+  state.allowance=Math.max(0,Number($("allowance").value)||0);
+  state.otherIncome=Math.max(0,Number($("otherIncome").value)||0);
+  save();render();
+ });
+});
+$("expenseForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ const description=$("expenseName").value.trim();
+ const amount=Number($("expenseAmount").value);
+ const category=$("expenseCategory").value;
+ const date=$("expenseDate").value;
+ if(!description||!Number.isFinite(amount)||amount<=0||!date){alert("Please enter a description, a valid amount, and a date.");return;}
+ if(!["Needs","Savings","Wants"].includes(category)){alert("Please select a valid category.");return;}
+ if(editingId){
+  const index=expenses.findIndex(e=>e.id===editingId);
+  if(index>=0)expenses[index]={...expenses[index],description,amount,category,date};
+ }else{
+  expenses.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,9),description,amount,category,date});
+ }
+ cancelEdit();save();render();
+});
+$("cancelEdit").addEventListener("click",cancelEdit);
+$("printBtn").addEventListener("click",()=>window.print());
+$("resetBtn").addEventListener("click",()=>{
+ if(!confirm("Reset all budget details and expenses? This cannot be undone."))return;
+ state={name:"",allowance:0,otherIncome:0};expenses=[];cancelEdit();
+ $("studentName").value="";$("allowance").value="";$("otherIncome").value="";
+ save();render();
+});
+safeLoad();$("expenseDate").value=today();render();
+})();
+</script>
+</body>
+</html>
